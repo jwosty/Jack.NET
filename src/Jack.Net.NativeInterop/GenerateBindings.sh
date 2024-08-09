@@ -43,7 +43,7 @@ if [ ! -f "${LIBCLANGSHARP_LINK_TARGET}" ]; then
 #  ln -s "${LIBCLANGSHARP_LOCATION}" "${LIBCLANGSHARP_LINK_TARGET}"
 fi
 
-rm -f "$SCRIPT_DIR"/*.cs
+rm -f "$SCRIPT_DIR"/jack/*.cs
 
 #export LD_DEBUG=libs
 
@@ -52,7 +52,7 @@ rm -f "$SCRIPT_DIR"/*.cs
 dotnet ClangSharpPInvokeGenerator \
   --language c \
   --config unix-types generate-helper-types multi-file exclude-funcs-with-body \
-  --output "${SCRIPT_DIR}/" \
+  --output "${SCRIPT_DIR}/jack/" \
   --namespace "Jack.Net.NativeInterop" \
   --libraryPath "libjack" \
   --include-directory "${HEADERS_DIR}" \

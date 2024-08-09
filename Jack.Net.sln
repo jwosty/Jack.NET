@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{40A24291-19F2-47D9-9825-40BB38D3C85D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jack.Net.NativeInterop", "src\Jack.Net.NativeInterop\Jack.Net.NativeInterop.csproj", "{C984CE61-0971-4E9C-B928-B93D8305B4CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jack.Net.Interop", "src\Jack.Net.Interop\Jack.Net.Interop.csproj", "{C984CE61-0971-4E9C-B928-B93D8305B4CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6CC0757E-1ADD-473A-8712-20748D0629E5}"
 	ProjectSection(SolutionItems) = preProject

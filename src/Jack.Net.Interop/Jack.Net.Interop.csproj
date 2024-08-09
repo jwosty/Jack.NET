@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' AND '$(PackAsTool)' != 'true'">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>Jack.Net.Interop</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+      <None Include="..\..\headers\jack\*.h" LinkBase="headers" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="libclang" Version="18.1.3.2" />
+      <PackageReference Include="libClangSharp" Version="18.1.3.1" />
+    </ItemGroup>
+</Project>

@@ -60,8 +60,7 @@ dotnet ClangSharpPInvokeGenerator \
   --include-directory "${HEADERS_DIR}" \
   --include-directory "/usr/lib/clang/18/include" \
   --additional "--include" "stdint.h" \
-  --remap sigset_t=@void* \
-  --remap pthread_attr_t*=@void* \
+  --remap __sigset_t=sigset_t \
   --file-directory "${HEADERS_DIR}" \
   --file "jack/intclient.h" \
   --file "jack/jack.h" \
@@ -90,7 +89,6 @@ dotnet ClangSharpPInvokeGenerator \
   --include-directory "${HEADERS_DIR}" \
   --include-directory "/usr/lib/clang/18/include" \
   --additional "--include" "stdint.h" \
-  --remap sigset_t=@void* \
-  --remap pthread_attr_t*=@void* \
+  --remap __sigset_t=sigset_t \
   --file-directory "${HEADERS_DIR}" \
   --file "jack/control.h" \

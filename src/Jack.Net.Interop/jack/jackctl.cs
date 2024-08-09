@@ -5,11 +5,10 @@ namespace Jack.Net.Interop
     public static unsafe partial class jackctl
     {
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, EntryPoint = "jackctl_setup_signals", ExactSpelling = true)]
-        [return: NativeTypeName("sigset_t")]
-        public static extern void* setup_signals([NativeTypeName("unsigned int")] uint flags);
+        public static extern sigset_t setup_signals([NativeTypeName("unsigned int")] uint flags);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, EntryPoint = "jackctl_wait_signals", ExactSpelling = true)]
-        public static extern void wait_signals([NativeTypeName("sigset_t")] void* signals);
+        public static extern void wait_signals(sigset_t signals);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, EntryPoint = "jackctl_server_create", ExactSpelling = true)]
         [return: NativeTypeName("jackctl_server_t *")]

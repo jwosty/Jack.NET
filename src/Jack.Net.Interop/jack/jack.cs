@@ -472,7 +472,7 @@ namespace Jack.Net.Interop
         public static extern int drop_real_time_scheduling([NativeTypeName("jack_native_thread_t")] nuint thread);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, EntryPoint = "jack_set_thread_creator", ExactSpelling = true)]
-        public static extern void set_thread_creator([NativeTypeName("jack_thread_creator_t")] delegate* unmanaged[Cdecl]<nuint*, void*, delegate* unmanaged[Cdecl]<void*, void*>, void*, int> creator);
+        public static extern void set_thread_creator([NativeTypeName("jack_thread_creator_t")] delegate* unmanaged[Cdecl]<nuint*, pthread_attr_t*, delegate* unmanaged[Cdecl]<void*, void*>, void*, int> creator);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, EntryPoint = "jack_release_timebase", ExactSpelling = true)]
         public static extern int release_timebase([NativeTypeName("jack_client_t *")] _jack_client* client);

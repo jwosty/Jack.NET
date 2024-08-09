@@ -47,6 +47,8 @@ rm -f "$SCRIPT_DIR"/*.cs
 
 #export LD_DEBUG=libs
 
+# TODO: consider making an actual opaque struct type to use for sigset_t and pthread_attr_t instead of just void*
+
 dotnet ClangSharpPInvokeGenerator \
   --language c \
   --config unix-types generate-helper-types multi-file exclude-funcs-with-body \
@@ -56,6 +58,8 @@ dotnet ClangSharpPInvokeGenerator \
   --include-directory "${HEADERS_DIR}" \
   --include-directory "/usr/lib/clang/18/include" \
   --additional "--include" "stdint.h" \
+  --remap sigset_t=@void* \
+  --remap pthread_attr_t*=@void* \
   --file-directory "${HEADERS_DIR}" \
   --file "jack/control.h" \
   --file "jack/intclient.h" \

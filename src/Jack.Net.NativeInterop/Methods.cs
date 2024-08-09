@@ -7,10 +7,10 @@ namespace Jack.Net.NativeInterop
     {
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("sigset_t")]
-        public static extern __sigset_t jackctl_setup_signals([NativeTypeName("unsigned int")] uint flags);
+        public static extern void* jackctl_setup_signals([NativeTypeName("unsigned int")] uint flags);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void jackctl_wait_signals([NativeTypeName("sigset_t")] __sigset_t signals);
+        public static extern void jackctl_wait_signals([NativeTypeName("sigset_t")] void* signals);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("jackctl_server_t *")]
@@ -621,7 +621,7 @@ namespace Jack.Net.NativeInterop
         public static extern int jack_drop_real_time_scheduling([NativeTypeName("jack_native_thread_t")] nuint thread);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void jack_set_thread_creator([NativeTypeName("jack_thread_creator_t")] delegate* unmanaged[Cdecl]<nuint*, pthread_attr_t*, delegate* unmanaged[Cdecl]<void*, void*>, void*, int> creator);
+        public static extern void jack_set_thread_creator([NativeTypeName("jack_thread_creator_t")] delegate* unmanaged[Cdecl]<nuint*, void*, delegate* unmanaged[Cdecl]<void*, void*>, void*, int> creator);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int jack_release_timebase([NativeTypeName("jack_client_t *")] _jack_client* client);

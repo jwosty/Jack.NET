@@ -6,6 +6,155 @@ namespace Jack.Net.NativeInterop
     public static unsafe partial class Methods
     {
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("sigset_t")]
+        public static extern __sigset_t jackctl_setup_signals([NativeTypeName("unsigned int")] uint flags);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void jackctl_wait_signals([NativeTypeName("sigset_t")] __sigset_t signals);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("jackctl_server_t *")]
+        public static extern jackctl_server* jackctl_server_create([NativeTypeName("_Bool (*)(const char *)")] delegate* unmanaged[Cdecl]<byte*, byte> on_device_acquire, [NativeTypeName("void (*)(const char *)")] delegate* unmanaged[Cdecl]<byte*, void> on_device_release);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void jackctl_server_destroy([NativeTypeName("jackctl_server_t *")] jackctl_server* server);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_server_start([NativeTypeName("jackctl_server_t *")] jackctl_server* server, [NativeTypeName("jackctl_driver_t *")] jackctl_driver* driver);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_server_stop([NativeTypeName("jackctl_server_t *")] jackctl_server* server);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const JSList *")]
+        public static extern _JSList* jackctl_server_get_drivers_list([NativeTypeName("jackctl_server_t *")] jackctl_server* server);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const JSList *")]
+        public static extern _JSList* jackctl_server_get_parameters([NativeTypeName("jackctl_server_t *")] jackctl_server* server);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const JSList *")]
+        public static extern _JSList* jackctl_server_get_internals_list([NativeTypeName("jackctl_server_t *")] jackctl_server* server);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_server_load_internal([NativeTypeName("jackctl_server_t *")] jackctl_server* server, [NativeTypeName("jackctl_internal_t *")] jackctl_internal* @internal);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_server_unload_internal([NativeTypeName("jackctl_server_t *")] jackctl_server* server, [NativeTypeName("jackctl_internal_t *")] jackctl_internal* @internal);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_server_add_slave([NativeTypeName("jackctl_server_t *")] jackctl_server* server, [NativeTypeName("jackctl_driver_t *")] jackctl_driver* driver);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_server_remove_slave([NativeTypeName("jackctl_server_t *")] jackctl_server* server, [NativeTypeName("jackctl_driver_t *")] jackctl_driver* driver);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_server_switch_master([NativeTypeName("jackctl_server_t *")] jackctl_server* server, [NativeTypeName("jackctl_driver_t *")] jackctl_driver* driver);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern byte* jackctl_driver_get_name([NativeTypeName("jackctl_driver_t *")] jackctl_driver* driver);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const JSList *")]
+        public static extern _JSList* jackctl_driver_get_parameters([NativeTypeName("jackctl_driver_t *")] jackctl_driver* driver);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern byte* jackctl_internal_get_name([NativeTypeName("jackctl_internal_t *")] jackctl_internal* @internal);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const JSList *")]
+        public static extern _JSList* jackctl_internal_get_parameters([NativeTypeName("jackctl_internal_t *")] jackctl_internal* @internal);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern byte* jackctl_parameter_get_name([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern byte* jackctl_parameter_get_short_description([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern byte* jackctl_parameter_get_long_description([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern jackctl_param_type_t jackctl_parameter_get_type([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("char")]
+        public static extern byte jackctl_parameter_get_id([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_parameter_is_set([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_parameter_reset([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("union jackctl_parameter_value")]
+        public static extern jackctl_parameter_value jackctl_parameter_get_value([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_parameter_set_value([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter, [NativeTypeName("const union jackctl_parameter_value *")] jackctl_parameter_value* value_ptr);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("union jackctl_parameter_value")]
+        public static extern jackctl_parameter_value jackctl_parameter_get_default_value([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_parameter_has_range_constraint([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_parameter_has_enum_constraint([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("uint32_t")]
+        public static extern uint jackctl_parameter_get_enum_constraints_count([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("union jackctl_parameter_value")]
+        public static extern jackctl_parameter_value jackctl_parameter_get_enum_constraint_value([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter, [NativeTypeName("uint32_t")] uint index);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern byte* jackctl_parameter_get_enum_constraint_description([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter, [NativeTypeName("uint32_t")] uint index);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void jackctl_parameter_get_range_constraint([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter, [NativeTypeName("union jackctl_parameter_value *")] jackctl_parameter_value* min_ptr, [NativeTypeName("union jackctl_parameter_value *")] jackctl_parameter_value* max_ptr);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_parameter_constraint_is_strict([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("_Bool")]
+        public static extern byte jackctl_parameter_constraint_is_fake_value([NativeTypeName("jackctl_parameter_t *")] jackctl_parameter* parameter);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void jack_error([NativeTypeName("const char *")] byte* format, __arglist);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void jack_info([NativeTypeName("const char *")] byte* format, __arglist);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void jack_log([NativeTypeName("const char *")] byte* format, __arglist);
+
+        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("char *")]
         public static extern byte* jack_get_internal_client_name([NativeTypeName("jack_client_t *")] _jack_client* client, [NativeTypeName("jack_intclient_t")] nuint intclient);
 
@@ -347,9 +496,6 @@ namespace Jack.Net.NativeInterop
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int jack_set_property_change_callback([NativeTypeName("jack_client_t *")] _jack_client* client, [NativeTypeName("JackPropertyChangeCallback")] delegate* unmanaged[Cdecl]<nuint, byte*, jack_property_change_t, void*, void> callback, void* arg);
-
-        [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void* jack_port_request_monitor(void* param0, [NativeTypeName("unsigned long")] nuint param1);
 
         [DllImport("libjack", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("jack_nframes_t")]

@@ -55,6 +55,7 @@ dotnet ClangSharpPInvokeGenerator \
   --libraryPath "libjack" \
   --include-directory "${HEADERS_DIR}" \
   --include-directory "/usr/lib/clang/18/include" \
+  --additional "--include" "stdint.h" \
   --file-directory "${HEADERS_DIR}" \
   --file "jack/control.h" \
   --file "jack/intclient.h" \

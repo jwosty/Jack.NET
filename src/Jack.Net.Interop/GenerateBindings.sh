@@ -45,7 +45,9 @@ rm -f "$SCRIPT_DIR"/jack/*.cs
 
 #export LD_DEBUG=libs
 
-# TODO: consider making an actual opaque struct type to use for sigset_t and pthread_attr_t instead of just void*
+# TODO: consider making an actual opaque struct type to use for sigset_t and pthread_attr_t instead of just void*=
+
+set +e
 
 dotnet ClangSharpPInvokeGenerator \
   --language c \
@@ -61,7 +63,6 @@ dotnet ClangSharpPInvokeGenerator \
   --remap sigset_t=@void* \
   --remap pthread_attr_t*=@void* \
   --file-directory "${HEADERS_DIR}" \
-  --file "jack/control.h" \
   --file "jack/intclient.h" \
   --file "jack/jack.h" \
   --file "jack/jslist.h" \
@@ -77,3 +78,19 @@ dotnet ClangSharpPInvokeGenerator \
   --file "jack/uuid.h" \
   --file "jack/weakjack.h" \
   --file "jack/weakmacros.h"
+
+dotnet ClangSharpPInvokeGenerator \
+  --language c \
+  --config unix-types generate-helper-types multi-file exclude-funcs-with-body \
+  --output "${SCRIPT_DIR}/jack/" \
+  --namespace "Jack.Net.Interop" \
+  --methodClassName jackctl \
+  --prefixStrip jackctl_ \
+  --libraryPath "libjack" \
+  --include-directory "${HEADERS_DIR}" \
+  --include-directory "/usr/lib/clang/18/include" \
+  --additional "--include" "stdint.h" \
+  --remap sigset_t=@void* \
+  --remap pthread_attr_t*=@void* \
+  --file-directory "${HEADERS_DIR}" \
+  --file "jack/control.h" \

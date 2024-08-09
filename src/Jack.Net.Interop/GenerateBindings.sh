@@ -52,6 +52,8 @@ dotnet ClangSharpPInvokeGenerator \
   --config unix-types generate-helper-types multi-file exclude-funcs-with-body \
   --output "${SCRIPT_DIR}/jack/" \
   --namespace "Jack.Net.Interop" \
+  --methodClassName jack \
+  --prefixStrip jack_ \
   --libraryPath "libjack" \
   --include-directory "${HEADERS_DIR}" \
   --include-directory "/usr/lib/clang/18/include" \

@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jack.Net", "src\Jack.Net\Jack.Net.csproj", "{60DB9842-23D2-4524-B15D-BA8255C23B1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JackTest", "src\JackTest\JackTest.csproj", "{D1F630F0-4816-4E90-A1F4-F7518218681E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,8 +23,18 @@ Global
 		{C984CE61-0971-4E9C-B928-B93D8305B4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C984CE61-0971-4E9C-B928-B93D8305B4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C984CE61-0971-4E9C-B928-B93D8305B4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DB9842-23D2-4524-B15D-BA8255C23B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DB9842-23D2-4524-B15D-BA8255C23B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DB9842-23D2-4524-B15D-BA8255C23B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DB9842-23D2-4524-B15D-BA8255C23B1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1F630F0-4816-4E90-A1F4-F7518218681E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1F630F0-4816-4E90-A1F4-F7518218681E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1F630F0-4816-4E90-A1F4-F7518218681E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1F630F0-4816-4E90-A1F4-F7518218681E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C984CE61-0971-4E9C-B928-B93D8305B4CF} = {40A24291-19F2-47D9-9825-40BB38D3C85D}
+		{60DB9842-23D2-4524-B15D-BA8255C23B1A} = {40A24291-19F2-47D9-9825-40BB38D3C85D}
+		{D1F630F0-4816-4E90-A1F4-F7518218681E} = {40A24291-19F2-47D9-9825-40BB38D3C85D}
 	EndGlobalSection
 EndGlobal

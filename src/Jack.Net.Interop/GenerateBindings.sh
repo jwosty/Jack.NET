@@ -56,7 +56,7 @@ dotnet ClangSharpPInvokeGenerator \
   --namespace "Jack.Net.Interop" \
   --methodClassName jack \
   --prefixStrip jack_ \
-  --libraryPath "libjack" \
+  --libraryPath "libjack.so.0" \
   --include-directory "${HEADERS_DIR}" \
   --include-directory "/usr/lib/clang/18/include" \
   --additional "--include" "stdint.h" \
@@ -85,7 +85,7 @@ dotnet ClangSharpPInvokeGenerator \
   --namespace "Jack.Net.Interop" \
   --methodClassName jackctl \
   --prefixStrip jackctl_ \
-  --libraryPath "libjack" \
+  --libraryPath "libjackserver.so.0" \
   --include-directory "${HEADERS_DIR}" \
   --include-directory "/usr/lib/clang/18/include" \
   --additional "--include" "stdint.h" \

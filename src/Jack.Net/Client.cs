@@ -8,6 +8,7 @@ public unsafe class Client(_jack_client* handle) : IDisposable
 {
     public _jack_client* Handle { get; private set; } = handle;
 
+    [MustDisposeResource]
     public static Client Open(string name, JackOptions options, out JackStatus status, string? serverName = null)
     {
         var clientPtr = serverName is null
@@ -59,14 +60,9 @@ public unsafe class Client(_jack_client* handle) : IDisposable
 
     public uint ThreadId => (uint)Jack.ClientThreadId(this.Handle);
 
-    private void ReleaseUnmanagedResources()
-    {
-        this.Close();
-    }
-
     protected virtual void Dispose(bool disposing)
     {
-        this.ReleaseUnmanagedResources();
+        this.Close();
         if (disposing)
         {
             this.Handle = null;

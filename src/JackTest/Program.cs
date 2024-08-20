@@ -25,9 +25,35 @@ public static unsafe class Program
             {
                 // Console.WriteLine("{0}: {1} = {2}", driverParam.Name, driverParam.ParameterType, driverParam.Value);
                 // Console.WriteLine("{0}: {1} ({2} / {3})", driverParam.Name, driverParam.GetType().Name, driverParam.ShortDescription, driverParam.LongDescription);
-                Console.WriteLine("{0} ({1}) = {2}", driverParam.Name, driverParam.ShortDescription, driverParam.BoxedValue);
+                switch (driverParam)
+                {
+                    case IParameter<int> tp:
+                        VisitDriverParam(tp);
+                        break;
+                    case IParameter<uint> tp:
+                        VisitDriverParam(tp);
+                        break;
+                    case IParameter<char> tp:
+                        VisitDriverParam(tp);
+                        break;
+                    case IParameter<byte> tp:
+                        VisitDriverParam(tp);
+                        break;
+                    case IParameter<string?> tp:
+                        VisitDriverParam(tp);
+                        break;
+                }
             }
             Console.WriteLine("");
+        }
+    }
+
+    private static void VisitDriverParam<T>(IParameter<T> typedParam)
+    {
+        Console.WriteLine("  {0} ({1}) = {2}", typedParam.Name, typedParam.ShortDescription, typedParam.BoxedValue);
+        if (typedParam.TryGetRangeConstraint(out var minValue, out var maxValue))
+        {
+            Console.WriteLine("    RangeConstraint = {0}..{1}", minValue, maxValue);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -13,14 +14,17 @@ using P = Jack.Net.Interop.JackCtl.Parameter;
 
 namespace Jack.Net;
 
+[PublicAPI]
 public interface IParamEnumConstraint<out T>
 {
     public string? Description { get; }
     public T Value { get; }
 }
 
+[PublicAPI]
 public readonly record struct ParamEnumConstraint<T>(string? Description, T Value) : IParamEnumConstraint<T>;
 
+[PublicAPI]
 public interface IParameter
 {
     public unsafe jackctl_parameter* Handle { get; }
@@ -38,20 +42,22 @@ public interface IParameter
     public bool HasEnumConstraint();
 }
 
-public interface IParameter<out T> : IParameter
+[PublicAPI]
+public interface IParameter<T> : IParameter
 {
     public T Value { get; }
     public T DefaultValue { get; }
     public IReadOnlyList<IParamEnumConstraint<T>> EnumConstraints { get; }
-    public T RangeConstraintMinValue { get; }
-    public T RangeConstraintMaxValue { get; }
+    public bool TryGetRangeConstraint(out T? minValue, out T? maxValue);
 }
 
+[PublicAPI]
 public interface IMutableParameter<T> : IParameter<T>
 {
     public new T Value { get; set; }
 }
 
+[PublicAPI]
 public abstract unsafe class Parameter : IParameter
 {
     public jackctl_parameter* Handle { get; }
@@ -151,7 +157,7 @@ public abstract unsafe class Parameter : IParameter
     public bool ConstraintIsFakeValue => P.ConstraintIsFakeValue(this.Handle);
 }
 
-public interface IParameterMarshaller<T>
+internal interface IParameterMarshaller<T>
 {
     public T UnmanagedToManaged(jackctl_parameter_value value);
     public jackctl_parameter_value ManagedToUnmanaged(T value);
@@ -253,7 +259,7 @@ internal sealed unsafe class ParamEnumConstraintCollection<T> : IReadOnlyList<IP
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }
 
-
+[PublicAPI]
 public sealed unsafe class Parameter<T> : Parameter, IParameter<T>, IMutableParameter<T>
 {
     private readonly IParameterMarshaller<T> _marshaller;
@@ -283,21 +289,23 @@ public sealed unsafe class Parameter<T> : Parameter, IParameter<T>, IMutablePara
     public IReadOnlyList<IParamEnumConstraint<T>> EnumConstraints =>
         new ParamEnumConstraintCollection<T>(this, this._marshaller);
 
-    public T RangeConstraintMinValue
+    public bool TryGetRangeConstraint([NotNullWhen(true)] out T? minValue, [NotNullWhen(true)] out T? maxValue)
     {
-        get
+        if (this.HasRangeConstraint())
         {
-            P.GetRangeConstraint(this.Handle, out var minValue, out _);
-            return this._marshaller.UnmanagedToManaged(minValue);
+            P.GetRangeConstraint(this.Handle, out var minValueStruct, out var maxValueStruct);
+            // Should be fine to suppress nullability here... JACK only seems to allow ranges on int and uint
+            // parameters (and the only thing that could possibly come back null is string).
+            // See: https://github.com/jackaudio/jack1/blob/ab2e7363cacd0bf4b961c0466c13b0b4c1086ed9/jackd/controlapi.c#L1281
+            minValue = this._marshaller.UnmanagedToManaged(minValueStruct)!;
+            maxValue = this._marshaller.UnmanagedToManaged(maxValueStruct)!;
+            return true;
         }
-    }
-
-    public T RangeConstraintMaxValue
-    {
-        get
+        else
         {
-            P.GetRangeConstraint(this.Handle, out _, out var maxValue);
-            return this._marshaller.UnmanagedToManaged(maxValue);
+            minValue = default;
+            maxValue = default;
+            return false;
         }
     }
 

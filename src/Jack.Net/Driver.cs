@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using Jack.Net.Interop;
 using JetBrains.Annotations;
@@ -8,6 +9,7 @@ using D = Jack.Net.Interop.JackCtl.Driver;
 namespace Jack.Net;
 
 [PublicAPI]
+[DebuggerDisplay("Name = {Name}")]
 public unsafe class Driver(jackctl_driver* handle)
 {
     public jackctl_driver* Handle { get; private set; } = handle;

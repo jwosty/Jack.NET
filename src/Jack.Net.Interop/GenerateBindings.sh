@@ -51,7 +51,7 @@ set +e
 
 dotnet ClangSharpPInvokeGenerator \
   --language c \
-  --config unix-types generate-helper-types multi-file exclude-funcs-with-body \
+  --config latest-codegen unix-types generate-helper-types multi-file exclude-funcs-with-body \
   --output "${SCRIPT_DIR}/jack/" \
   --namespace "Jack.Net.Interop" \
   --methodClassName jack \
@@ -80,7 +80,7 @@ dotnet ClangSharpPInvokeGenerator \
 
 dotnet ClangSharpPInvokeGenerator \
   --language c \
-  --config unix-types generate-helper-types multi-file exclude-funcs-with-body \
+  --config latest-codegen unix-types generate-helper-types multi-file exclude-funcs-with-body \
   --output "${SCRIPT_DIR}/jack/" \
   --namespace "Jack.Net.Interop" \
   --methodClassName jackctl \

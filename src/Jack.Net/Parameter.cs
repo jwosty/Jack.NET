@@ -33,6 +33,7 @@ public interface IParameter
     public bool ConstraintIsStrict { get; }
     public bool ConstraintIsFakeValue { get; }
     public bool Reset();
+    public object? BoxedValue { get; }
     public bool HasRangeConstraint();
     public bool HasEnumConstraint();
 }
@@ -72,7 +73,7 @@ public abstract unsafe class Parameter : IParameter
     private jackctl_param_type_t? _parameterType;
     public jackctl_param_type_t ParameterType => this._parameterType ??= P.GetParameterType(this.Handle);
 
-    public static Parameter FromHandle(jackctl_parameter* paramPtr)
+    public static IParameter FromHandle(jackctl_parameter* paramPtr)
     {
         var pType = P.GetParameterType(paramPtr);
         return pType switch
@@ -143,27 +144,17 @@ public abstract unsafe class Parameter : IParameter
     public byte Id => P.GetId(this.Handle);
     public bool IsSet => P.IsSet(this.Handle);
     public bool Reset() => P.Reset(this.Handle);
+    public abstract object? BoxedValue { get; }
     public bool HasRangeConstraint() => P.HasRangeConstraint(this.Handle);
     public bool HasEnumConstraint() => P.HasEnumConstraint(this.Handle);
     public bool ConstraintIsStrict => P.ConstraintIsStrict(this.Handle);
     public bool ConstraintIsFakeValue => P.ConstraintIsFakeValue(this.Handle);
 }
 
-public interface IParameterValueOwner : IDisposable
-{
-    public jackctl_parameter_value Value { get; }
-}
-
-internal readonly struct StatelessParameterValueOwner(jackctl_parameter_value value) : IParameterValueOwner
-{
-    public jackctl_parameter_value Value => value;
-    public void Dispose() { }
-}
-
 public interface IParameterMarshaller<T>
 {
     public T UnmanagedToManaged(jackctl_parameter_value value);
-    public IParameterValueOwner ManagedToUnmanaged(T value);
+    public jackctl_parameter_value ManagedToUnmanaged(T value);
 }
 
 internal static class ParameterMarshaller
@@ -179,54 +170,44 @@ internal sealed class IntMarshaller : IParameterMarshaller<int>
 {
     public int UnmanagedToManaged(jackctl_parameter_value value) => value.i;
 
-    public IParameterValueOwner ManagedToUnmanaged(int value) =>
-        new StatelessParameterValueOwner(new jackctl_parameter_value { i = value});
+    public jackctl_parameter_value ManagedToUnmanaged(int value) =>
+        new jackctl_parameter_value { i = value};
 }
 
 internal sealed class UIntMarshaller : IParameterMarshaller<uint>
 {
     public uint UnmanagedToManaged(jackctl_parameter_value value) => value.ui;
 
-    public IParameterValueOwner ManagedToUnmanaged(uint value) =>
-        new StatelessParameterValueOwner(new jackctl_parameter_value { ui = value});
+    public jackctl_parameter_value ManagedToUnmanaged(uint value) =>
+        new jackctl_parameter_value { ui = value};
 }
 
 internal sealed class CharMarshaller : IParameterMarshaller<char>
 {
     public char UnmanagedToManaged(jackctl_parameter_value value) => (char)value.c;
 
-    public IParameterValueOwner ManagedToUnmanaged(char value) =>
-        new StatelessParameterValueOwner(new jackctl_parameter_value { c = (byte)value});
+    public jackctl_parameter_value ManagedToUnmanaged(char value) =>
+        new jackctl_parameter_value { c = (byte)value};
 }
 
 internal sealed class BoolMarshaller : IParameterMarshaller<bool>
 {
     public bool UnmanagedToManaged(jackctl_parameter_value value) => value.b != 0;
 
-    public IParameterValueOwner ManagedToUnmanaged(bool value) =>
-        new StatelessParameterValueOwner(new jackctl_parameter_value { b = value ? (byte)1 : (byte)0});
+    public jackctl_parameter_value ManagedToUnmanaged(bool value) =>
+        new jackctl_parameter_value { b = value ? (byte)1 : (byte)0};
 }
 
 
 internal sealed unsafe class StringMarshaller : IParameterMarshaller<string?>
 {
-    private unsafe class StringParameterValueOwner(jackctl_parameter_value value) : IParameterValueOwner
+    public string? UnmanagedToManaged(jackctl_parameter_value value)
     {
-        private jackctl_parameter_value _value = value;
-        public jackctl_parameter_value Value => this._value;
-
-        public void Dispose()
-        {
-            fixed (byte* strPtr = this._value.str)
-            {
-                Marshal.ZeroFreeCoTaskMemUTF8((nint)strPtr);
-            }
-        }
+        byte* strPtr = &value.str.e0;
+        return Marshal.PtrToStringUTF8((nint)strPtr);
     }
 
-    public string? UnmanagedToManaged(jackctl_parameter_value value) => Marshal.PtrToStringUTF8((nint)value.str);
-
-    public IParameterValueOwner ManagedToUnmanaged(string? value)
+    public jackctl_parameter_value ManagedToUnmanaged(string? value)
     {
         // var theStruct = new jackctl_parameter_value { str = (byte*)Marshal.StringToCoTaskMemUTF8(value) };
         // var valStruct = new jackctl_parameter_value();
@@ -292,8 +273,8 @@ public sealed unsafe class Parameter<T> : Parameter, IParameter<T>, IMutablePara
         get => this._marshaller.UnmanagedToManaged(P.GetValue(this.Handle));
         set
         {
-            using var valStructOwner = this._marshaller.ManagedToUnmanaged(value);
-            P.SetValue(this.Handle, valStructOwner.Value);
+            var valStruct = this._marshaller.ManagedToUnmanaged(value);
+            P.SetValue(this.Handle, valStruct);
         }
     }
 
@@ -319,4 +300,6 @@ public sealed unsafe class Parameter<T> : Parameter, IParameter<T>, IMutablePara
             return this._marshaller.UnmanagedToManaged(maxValue);
         }
     }
+
+    public override object? BoxedValue => this.Value;
 }

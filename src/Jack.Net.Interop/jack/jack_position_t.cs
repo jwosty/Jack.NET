@@ -1,9 +1,10 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Jack.Net.Interop
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe partial struct jack_position_t
+    public partial struct jack_position_t
     {
         [NativeTypeName("jack_unique_t")]
         public nuint unique_1;
@@ -53,9 +54,16 @@ namespace Jack.Net.Interop
         public double tick_double;
 
         [NativeTypeName("int32_t[5]")]
-        public fixed int padding[5];
+        public _padding_e__FixedBuffer padding;
 
         [NativeTypeName("jack_unique_t")]
         public nuint unique_2;
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        [InlineArray(5)]
+        public partial struct _padding_e__FixedBuffer
+        {
+            public int e0;
+        }
     }
 }

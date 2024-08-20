@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Jack.Net.Interop;
 using JetBrains.Annotations;
 using S = Jack.Net.Interop.JackCtl.Server;
@@ -11,30 +13,77 @@ namespace Jack.Net;
 [PublicAPI]
 public unsafe class Server(jackctl_server* handle) : IDisposable
 {
-    public jackctl_server* Handle { get; private set; } = handle;
+    public jackctl_server* Handle { get; } = handle;
+
+    private bool _disposed = false;
+
+    // references held by native code that we need to keep alive
+    private ConcurrentBag<GCHandle> _nativeReferences = new();
 
     [MustDisposeResource]
-    public static Server Create() => new(S.Create());
+    public static Server Create(Func<string?, bool>? onDeviceAcquire = null, Action<string?>? onDeviceRelease = null)
+    {
+        S.DeviceAcquireHandler? onDeviceAcquireRaw = null;
+        if (onDeviceAcquire is not null)
+        {
+            onDeviceAcquireRaw = (byte* deviceNamePtr) =>
+            {
+                var result = onDeviceAcquire(Marshal.PtrToStringUTF8((nint)deviceNamePtr));
+                return result ? (byte)1 : (byte)0;
+            };
+        }
+
+        S.DeviceReleaseHandler? onDeviceReleaseRaw = null;
+        if (onDeviceRelease is not null)
+        {
+            onDeviceReleaseRaw = (byte* deviceNamePtr) => onDeviceRelease(Marshal.PtrToStringUTF8((nint)deviceNamePtr));
+        }
+        var server = new Server(S.Create(onDeviceAcquireRaw, onDeviceReleaseRaw));
+        server.TrackNativeReference(onDeviceAcquireRaw);
+        server.TrackNativeReference(onDeviceReleaseRaw);
+        return server;
+    }
+
+    // Keep track of a given object as a native reference, preventing it from being GC'd or moved during the lifetime
+    // of the Server object
+    private void TrackNativeReference(object? d)
+    {
+        if (d is not null)
+        {
+            var handle = GCHandle.Alloc(d);
+            this._nativeReferences.Add(handle);
+        }
+    }
+
+    private void TrackNativeReference(GCHandle handle) => this._nativeReferences.Add(handle);
 
     private IImmutableList<Driver>? _driversList;
-
     public IImmutableList<Driver> DriversList => this._driversList ??= this.GetDriversList();
 
     private ImmutableArray<Driver> GetDriversList() =>
-        [
-            ..S.GetDriversList(this.Handle)
-                .Select(dPtr => new Driver(dPtr))
-        ];
+        [..S.GetDriversList(this.Handle).Select(dPtr => new Driver(dPtr))];
 
+    private IImmutableList<IParameter>? _parameters;
+    public IImmutableList<IParameter> Parameters => this._parameters ??= this.GetParameters();
 
-    private void Destroy() => S.Destroy(this.Handle);
+    private ImmutableArray<IParameter> GetParameters() =>
+        [..S.GetParameters(this.Handle).Select(pPtr => Parameter.FromHandle(pPtr))];
+
+    private void Destroy()
+    {
+        S.Destroy(this.Handle);
+        while (this._nativeReferences.TryTake(out var handle))
+        {
+            handle.Free();
+        }
+    }
 
     protected virtual void Dispose(bool disposing)
     {
-        this.Destroy();
-        if (disposing)
+        if (!this._disposed)
         {
-            this.Handle = null;
+            this.Destroy();
+            this._disposed = true;
         }
     }
 

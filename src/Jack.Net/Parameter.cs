@@ -215,11 +215,13 @@ internal sealed unsafe class StringMarshaller : IParameterMarshaller<string?>
 
     public jackctl_parameter_value ManagedToUnmanaged(string? value)
     {
-        // var theStruct = new jackctl_parameter_value { str = (byte*)Marshal.StringToCoTaskMemUTF8(value) };
-        // var valStruct = new jackctl_parameter_value();
-        // var x = new Span<byte>(valStruct.str, (nint)value.Length);
-        // var y = new StringParameterValueOwner(valStruct);
-        throw new NotImplementedException();
+        var dstValStruct = new jackctl_parameter_value();
+        var dstStrSpan = (Span<byte>)dstValStruct.str;
+        // Encoding.UTF8.GetBytes does not assume you need a null terminator. So, in order to ensure that we always end
+        // with one, shrink the dst by 1
+        var finalDstStrSpan = dstStrSpan.Length >= 1 ? dstStrSpan[..^1] : dstStrSpan;
+        Encoding.UTF8.TryGetBytes(value.AsSpan(), finalDstStrSpan, out _);
+        return dstValStruct;
     }
 }
 

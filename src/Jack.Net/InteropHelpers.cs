@@ -1,14 +1,25 @@
+using System.Runtime.CompilerServices;
+
 namespace Jack.Net;
 
 public static class InteropHelpers
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsSuccess(int errorCode) => errorCode == 0;
+
     public static void CheckResult(string errorMessage, int errorCode)
     {
-        if (errorCode != 0)
+        if (!IsSuccess(errorCode))
         {
             throw new JackException(errorMessage, errorCode);
         }
     }
 
-    public static bool IsSuccess(int errorCode) => errorCode != 0;
+    public static void CheckResult(string errorMessage, bool isSuccess)
+    {
+        if (!isSuccess)
+        {
+            throw new JackException(errorMessage);
+        }
+    }
 }

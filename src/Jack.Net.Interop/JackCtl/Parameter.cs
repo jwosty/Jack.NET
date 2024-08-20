@@ -41,4 +41,40 @@ public static unsafe class Parameter
 
     public static bool SetValue(jackctl_parameter* parameter, jackctl_parameter_value value) =>
         jackctl.parameter_set_value(parameter, &value) != 0;
+
+    public static jackctl_parameter_value GetDefaultValue(jackctl_parameter* parameter) =>
+        jackctl.parameter_get_default_value(parameter);
+
+    public static bool HasRangeConstraint(jackctl_parameter* parameter) =>
+        jackctl.parameter_has_range_constraint(parameter) != 0;
+
+    public static bool HasEnumConstraint(jackctl_parameter* parameter) =>
+        jackctl.parameter_has_enum_constraint(parameter) != 0;
+
+    public static uint EnumConstraintsCount(jackctl_parameter* parameter) =>
+        jackctl.parameter_get_enum_constraints_count(parameter);
+
+    public static jackctl_parameter_value EnumConstraintValue(jackctl_parameter* parameter, uint index) =>
+        jackctl.parameter_get_enum_constraint_value(parameter, index);
+
+    public static string? EnumConstraintDescription(jackctl_parameter* parameter, uint index) =>
+        Marshal.PtrToStringUTF8((IntPtr)jackctl.parameter_get_enum_constraint_description(parameter, index));
+
+    public static void GetRangeConstraint(jackctl_parameter* parameter, out jackctl_parameter_value minValue,
+        out jackctl_parameter_value maxValue)
+    {
+        fixed (jackctl_parameter_value* minValuePtr = &minValue)
+        {
+            fixed (jackctl_parameter_value* maxValuePtr = &maxValue)
+            {
+                jackctl.parameter_get_range_constraint(parameter, minValuePtr, maxValuePtr);
+            }
+        }
+    }
+
+    public static bool ConstraintIsStrict(jackctl_parameter* parameter) =>
+        jackctl.parameter_constraint_is_strict(parameter) != 0;
+
+    public static bool ConstraintIsFakeValue(jackctl_parameter* parameter) =>
+        jackctl.parameter_constraint_is_fake_value(parameter) != 0;
 }

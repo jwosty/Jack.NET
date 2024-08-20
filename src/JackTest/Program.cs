@@ -24,7 +24,8 @@ public static unsafe class Program
             foreach (var driverParam in driverParams)
             {
                 // Console.WriteLine("{0}: {1} = {2}", driverParam.Name, driverParam.ParameterType, driverParam.Value);
-                Console.WriteLine("{0}: {1} ({2} / {3})", driverParam.Name, driverParam.ParameterType, driverParam.ShortDescription, driverParam.LongDescription);
+                // Console.WriteLine("{0}: {1} ({2} / {3})", driverParam.Name, driverParam.GetType().Name, driverParam.ShortDescription, driverParam.LongDescription);
+                Console.WriteLine("{0}", driverParam);
                 if (driverParam.ShortDescription != driverParam.LongDescription)
                 {
                     Console.WriteLine("!!");

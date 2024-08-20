@@ -15,12 +15,12 @@ public unsafe class Driver(jackctl_driver* handle)
     private string? _name;
     public string? Name => this._name ??= D.GetName(this.Handle);
 
-    private IImmutableList<Parameter>? _parameters;
-    public IImmutableList<Parameter> Parameters => this._parameters ??= this.GetParameters();
+    private IImmutableList<IParameter>? _parameters;
+    public IImmutableList<IParameter> Parameters => this._parameters ??= this.GetParameters();
 
-    private ImmutableArray<Parameter> GetParameters() =>
+    private ImmutableArray<IParameter> GetParameters() =>
         [
             ..D.GetParameters(this.Handle)
-                .Select(pPtr => new Parameter(pPtr))
+                .Select(pPtr => Parameter.FromHandle(pPtr))
         ];
 }

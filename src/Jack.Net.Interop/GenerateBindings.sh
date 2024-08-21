@@ -49,19 +49,24 @@ rm -f "$SCRIPT_DIR"/jack/*.cs
 
 set +e
 
-dotnet ClangSharpPInvokeGenerator \
-  --language c \
-  --config latest-codegen unix-types generate-helper-types multi-file exclude-funcs-with-body \
-  --output "${SCRIPT_DIR}/jack/" \
-  --namespace "Jack.Net.Interop" \
+generate_bindings() {
+  dotnet ClangSharpPInvokeGenerator \
+    --language c \
+    --config latest-codegen unix-types generate-helper-types multi-file exclude-funcs-with-body \
+    --output "${SCRIPT_DIR}/jack/" \
+    --namespace "Jack.Net.Interop" \
+    --include-directory "${HEADERS_DIR}" \
+    --include-directory "/usr/lib/clang/18/include" \
+    --additional "--include" "stdint.h" \
+    --remap __sigset_t=sigset_t \
+    --file-directory "${HEADERS_DIR}" \
+    "$@";
+}
+
+generate_bindings \
   --methodClassName jack \
   --prefixStrip jack_ \
   --libraryPath "libjack.so.0" \
-  --include-directory "${HEADERS_DIR}" \
-  --include-directory "/usr/lib/clang/18/include" \
-  --additional "--include" "stdint.h" \
-  --remap __sigset_t=sigset_t \
-  --file-directory "${HEADERS_DIR}" \
   --file "jack/intclient.h" \
   --file "jack/jack.h" \
   --file "jack/jslist.h" \
@@ -76,19 +81,10 @@ dotnet ClangSharpPInvokeGenerator \
   --file "jack/types.h" \
   --file "jack/uuid.h" \
   --file "jack/weakjack.h" \
-  --file "jack/weakmacros.h"
+  --file "jack/weakmacros.h";
 
-dotnet ClangSharpPInvokeGenerator \
-  --language c \
-  --config latest-codegen unix-types generate-helper-types multi-file exclude-funcs-with-body \
-  --output "${SCRIPT_DIR}/jack/" \
-  --namespace "Jack.Net.Interop" \
+generate_bindings \
   --methodClassName jackctl \
   --prefixStrip jackctl_ \
   --libraryPath "libjackserver.so.0" \
-  --include-directory "${HEADERS_DIR}" \
-  --include-directory "/usr/lib/clang/18/include" \
-  --additional "--include" "stdint.h" \
-  --remap __sigset_t=sigset_t \
-  --file-directory "${HEADERS_DIR}" \
-  --file "jack/control.h" \
+  --file "jack/control.h";

@@ -4,6 +4,8 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Configurations>Release;Debug;LinuxRelease;LinuxDebug</Configurations>
+        <Platforms>x86;x64;arm64</Platforms>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Jack.Net.Interop\Jack.Net.Interop.csproj" />

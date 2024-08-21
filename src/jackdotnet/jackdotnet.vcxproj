@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup Label="ProjectConfigurations">
+        <ProjectCapability Include="PackageReferences"/>
+        <ProjectConfiguration Include="Debug|x86">
+            <Configuration>Debug</Configuration>
+            <Platform>x86</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Release|x86">
+            <Configuration>Release</Configuration>
+            <Platform>x86</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Debug|x64">
+            <Configuration>Debug</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Release|x64">
+            <Configuration>Release</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Debug|arm64">
+            <Configuration>Debug</Configuration>
+            <Platform>arm64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Release|arm64">
+            <Configuration>Release</Configuration>
+            <Platform>arm64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="LinuxDebug|x86">
+            <Configuration>LinuxDebug</Configuration>
+            <Platform>x86</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="LinuxRelease|x86">
+            <Configuration>LinuxRelease</Configuration>
+            <Platform>x86</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="LinuxDebug|x64">
+            <Configuration>LinuxDebug</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="LinuxRelease|x64">
+            <Configuration>LinuxRelease</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="LinuxDebug|arm64">
+            <Configuration>LinuxDebug</Configuration>
+            <Platform>arm64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="LinuxRelease|arm64">
+            <Configuration>LinuxRelease</Configuration>
+            <Platform>arm64</Platform>
+        </ProjectConfiguration>
+    </ItemGroup>
+    <PropertyGroup Label="Globals">
+        <VCTargetsPath Condition="'$(DesignTimeBuild)'!='true' AND $([MSBuild]::IsOSPlatform('Linux'))">./</VCTargetsPath>
+        <MSBuildProjectExtensionsPath Condition="'$(DesignTimeBuild)'!='true' AND ($(Configuration.Contains('Linux')) OR $(Platform.Contains('Linux')))">./</MSBuildProjectExtensionsPath>
+        <GCCBuild_UseWSL>false</GCCBuild_UseWSL>
+        <GCCToolCompilerStyle Condition="$(GCCToolCompilerStyle) != ''">llvm</GCCToolCompilerStyle>
+        <ProjectGuid>{F4E62AD1-12E5-4253-9E88-BAD31D414C10}</ProjectGuid>
+        <RootNamespace>jackdotnet</RootNamespace>
+    </PropertyGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+    <ItemDefinitionGroup>
+        <ClCompile>
+            <AdditionalIncludeDirectories>$(MSBuildProjectDir)..\..\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+        </ClCompile>
+    </ItemDefinitionGroup>
+    <PropertyGroup Label="NuGet">
+        <AssetTargetFallback>$(AssetTargetFallback);native</AssetTargetFallback>
+        <TargetFrameworkVersion>v0.0</TargetFrameworkVersion>
+        <TargetFramework>native</TargetFramework>
+        <TargetFrameworkIdentifier>native</TargetFrameworkIdentifier>
+        <TargetFrameworkMoniker Condition="'$(NuGetTargetMoniker)' == ''">native,Version=v0.0</TargetFrameworkMoniker>
+        <RuntimeIdentifiers Condition="'$(RuntimeIdentifiers)' == ''">win;win-x86;win-x64;win-arm;win-arm64</RuntimeIdentifiers>
+        <UseTargetPlatformAsNuGetTargetMoniker>false</UseTargetPlatformAsNuGetTargetMoniker>
+    </PropertyGroup>
+    <PropertyGroup Label="PlatformToolset">
+        <PlatformToolset>v140</PlatformToolset>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'LinuxDebug'" Label="Configuration">
+        <ConfigurationType>DynamicLibrary</ConfigurationType>
+        <UseDebugLibraries>true</UseDebugLibraries>
+        <CharacterSet>MultiByte</CharacterSet>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'LinuxRelease' " Label="Configuration">
+        <ConfigurationType>DynamicLibrary</ConfigurationType>
+        <UseDebugLibraries>false</UseDebugLibraries>
+        <WholeProgramOptimization>true</WholeProgramOptimization>
+        <CharacterSet>MultiByte</CharacterSet>
+    </PropertyGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" Condition="'$(VCTargetsPath)' != '.' AND '$(VCTargetsPath)' != '.\' AND '$(VCTargetsPath)' != './'"/>
+    <ImportGroup Label="ExtensionSettings">
+    </ImportGroup>
+    <ImportGroup Label="PropertySheets">
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    </ImportGroup>
+    <PropertyGroup Label="UserMacros"/>
+    
+    <ItemDefinitionGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'LinuxDebug' ">
+        <ClCompile>
+            <WarningLevel>Level3</WarningLevel>
+            <Optimization>Disabled</Optimization>
+        </ClCompile>
+        <Link>
+            <GenerateDebugInformation>true</GenerateDebugInformation>
+        </Link>
+    </ItemDefinitionGroup>
+    <ItemDefinitionGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'LinuxRelease' ">
+        <ClCompile>
+            <WarningLevel>Level3</WarningLevel>
+            <Optimization>MaxSpeed</Optimization>
+            <FunctionLevelLinking>true</FunctionLevelLinking>
+            <IntrinsicFunctions>true</IntrinsicFunctions>
+        </ClCompile>
+        <Link>
+            <GenerateDebugInformation>true</GenerateDebugInformation>
+            <EnableCOMDATFolding>true</EnableCOMDATFolding>
+            <OptimizeReferences>true</OptimizeReferences>
+        </Link>
+    </ItemDefinitionGroup>
+    <ItemGroup>
+        <ClInclude Include="jackdotnet.h"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="jackdotnet.c"/>
+    </ItemGroup>
+    <PropertyGroup>
+        <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\</IntDir>
+        <OutDir>$(ProjectDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    </PropertyGroup>
+<!--    <PropertyGroup>-->
+<!--        <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' == ''">$(IntDir)</OutDir>-->
+<!--        <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' != ''">$(ProjectDir)\$(Platform)\$(Configuration)\</OutDir>-->
+<!--        <OutputPath>$(OutDir)</OutputPath>-->
+<!--    </PropertyGroup>-->
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" Condition="'$(VCTargetsPath)' != '.' AND '$(VCTargetsPath)' != '.\' AND '$(VCTargetsPath)' != './'"/>
+    <ImportGroup Label="ExtensionTargets">
+    </ImportGroup>
+    <ItemGroup>
+        <PackageReference Include="GCCBuildTargets" Version="2.*"/>
+    </ItemGroup>
+</Project>

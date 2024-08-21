@@ -58,6 +58,9 @@
         <GCCToolCompilerStyle Condition="$(GCCToolCompilerStyle) != ''">llvm</GCCToolCompilerStyle>
         <ProjectGuid>{F4E62AD1-12E5-4253-9E88-BAD31D414C10}</ProjectGuid>
         <RootNamespace>jackdotnet</RootNamespace>
+        <AssemblyName>jackdotnet</AssemblyName>
+<!--        <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\</IntDir>-->
+<!--        <OutDir>$(ProjectDir)bin\$(Configuration)\$(Platform)\</OutDir>-->
     </PropertyGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
     <ItemDefinitionGroup>
@@ -124,10 +127,6 @@
     <ItemGroup>
         <ClCompile Include="jackdotnet.c"/>
     </ItemGroup>
-    <PropertyGroup>
-        <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\</IntDir>
-        <OutDir>$(ProjectDir)bin\$(Configuration)\$(Platform)\</OutDir>
-    </PropertyGroup>
 <!--    <PropertyGroup>-->
 <!--        <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' == ''">$(IntDir)</OutDir>-->
 <!--        <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' != ''">$(ProjectDir)\$(Platform)\$(Configuration)\</OutDir>-->
@@ -139,4 +138,13 @@
     <ItemGroup>
         <PackageReference Include="GCCBuildTargets" Version="2.*"/>
     </ItemGroup>
+    <PropertyGroup>
+        <TargetFileName>$(TargetName)$(TargetExt)</TargetFileName>
+        <TargetPath>$(OutDir)\$(TargetFileName)</TargetPath>
+    </PropertyGroup>
+    <Target Name="GetTargetPath" Returns="@(_OutputPathResult)">
+        <ItemGroup>
+            <_OutputPathResult Include="$(TargetPath)" />
+        </ItemGroup>
+    </Target>
 </Project>

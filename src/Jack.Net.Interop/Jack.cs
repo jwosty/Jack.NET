@@ -26,7 +26,7 @@ public static unsafe class Jack
         {
             fixed (JackStatus* statusPtr = &status)
             {
-                return jack.client_open(clientNamePtr, options, statusPtr, __arglist());
+                return jackdotnet_jack.client_open_0(clientNamePtr, options, statusPtr);
             }
         }
         finally
@@ -43,7 +43,7 @@ public static unsafe class Jack
             {
                 fixed (byte* serverNamePtr = serverName)
                 {
-                    return jack.client_open(clientNamePtr, options, statusPtr, __arglist(serverNamePtr));
+                    return jackdotnet_jack.client_open_1(clientNamePtr, options, statusPtr, serverNamePtr);
                 }
             }
         }

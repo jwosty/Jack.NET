@@ -9,6 +9,11 @@
         <Platforms>x86;x64;arm64</Platforms>
     </PropertyGroup>
     <ItemGroup>
+      <ProjectReference Include="..\jackdotnet\jackdotnet.vcxproj">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        <OutputItemType>Content</OutputItemType>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </ProjectReference>
       <ProjectReference Include="..\Jack.Net\Jack.Net.csproj" />
     </ItemGroup>
 </Project>

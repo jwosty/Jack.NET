@@ -59,11 +59,11 @@ generate_bindings() {
     --include-directory "/usr/lib/clang/18/include" \
     --additional "--include" "stdint.h" \
     --remap __sigset_t=sigset_t \
-    --file-directory "${HEADERS_DIR}" \
     "$@";
 }
 
 generate_bindings \
+  --file-directory "${HEADERS_DIR}" \
   --methodClassName jack \
   --prefixStrip jack_ \
   --libraryPath "libjack.so.0" \
@@ -84,7 +84,15 @@ generate_bindings \
   --file "jack/weakmacros.h";
 
 generate_bindings \
+  --file-directory "${HEADERS_DIR}" \
   --methodClassName jackctl \
   --prefixStrip jackctl_ \
   --libraryPath "libjackserver.so.0" \
   --file "jack/control.h";
+
+generate_bindings \
+  --file-directory "${SCRIPT_DIR}/../jackdotnet/" \
+  --methodClassName jackdotnet_jack \
+  --prefixStrip jackdotnet_jack_ \
+  --libraryPath "jackdotnet.so" \
+  --file "jackdotnet.h";

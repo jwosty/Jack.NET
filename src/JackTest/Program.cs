@@ -15,7 +15,8 @@ public static unsafe class Program
         DumpServerInfo();
         GC.Collect();
         Console.WriteLine("== Client ==");
-        using var client = Client.Open("foo", JackOptions.JackNullOption, out var status);
+        using var client = Client.Open("Jack.Net Test (◪)", JackOptions.JackNullOption, out var status);
+        Console.WriteLine("Client name: {0}", client.Name);
         Console.WriteLine("Done.");
     }
 

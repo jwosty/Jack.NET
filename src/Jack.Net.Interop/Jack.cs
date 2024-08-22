@@ -129,4 +129,25 @@ public static unsafe class Jack
     public static nuint ClientThreadId(_jack_client* client) => jack.client_thread_id(client);
 
     public static bool IsRealtime(_jack_client* client) => jack.is_realtime(client) != 0;
+
+    public static uint CycleWait(_jack_client* client) => jack.cycle_wait(client);
+
+    public static void CycleSignal(_jack_client* client, int status) => jack.cycle_signal(client, status);
+
+    public delegate void ThreadCallback(void* arg);
+
+    public static void SetProcessThread(_jack_client* client, ThreadCallback fun, void* arg)
+    {
+        var funPtr = Marshal.GetFunctionPointerForDelegate(fun);
+        jack.set_process_thread(client, (delegate* unmanaged[Cdecl]<void*, void*>)funPtr, (void*)arg);
+    }
+
+    public delegate void ThreadInitCallback(void* arg);
+
+    public static int SetThreadInitCallback(_jack_client* client, ThreadInitCallback threadInitCallback, void* arg)
+    {
+        var threadInitCallbackPtr = Marshal.GetFunctionPointerForDelegate(threadInitCallback);
+        return jack.set_thread_init_callback(client, (delegate* unmanaged[Cdecl]<void*, void>)threadInitCallbackPtr,
+            arg);
+    }
 }

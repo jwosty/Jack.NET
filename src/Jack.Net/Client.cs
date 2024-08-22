@@ -62,6 +62,8 @@ public unsafe class Client(_jack_client* handle) : IDisposable
 
     public bool IsRealtime => Jack.IsRealtime(this.Handle);
 
+    public uint CycleWait() => Jack.CycleWait(this.Handle);
+
     protected virtual void Dispose(bool disposing)
     {
         if (!this._disposed)

@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Jack.NET;
 using System;
 using Jack.NET.Interop;

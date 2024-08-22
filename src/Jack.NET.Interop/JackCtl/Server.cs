@@ -10,7 +10,6 @@ namespace Jack.NET.Interop.JackCtl;
 [PublicAPI]
 public static unsafe class Server
 {
-    // TODO: callbacks
     public static jackctl_server* Create(delegate* unmanaged[Cdecl]<byte*, byte> onDeviceAcquire,
         delegate* unmanaged[Cdecl]<byte*, void> onDeviceRelease) =>
         jackctl.server_create(onDeviceAcquire, onDeviceRelease);

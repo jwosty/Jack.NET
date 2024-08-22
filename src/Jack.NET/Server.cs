@@ -11,9 +11,9 @@ using S = Jack.NET.Interop.JackCtl.Server;
 namespace Jack.NET;
 
 [PublicAPI]
-public unsafe class Server(jackctl_server* handle) : IDisposable
+public unsafe class Server : IDisposable
 {
-    public jackctl_server* Handle { get; } = handle;
+    public jackctl_server* Handle { get; }
 
     private bool _disposed = false;
 
@@ -22,33 +22,59 @@ public unsafe class Server(jackctl_server* handle) : IDisposable
     // keep them alive indefinitely...
     private static ConcurrentBag<GCHandle> _permanentNativeReferences = new();
 
-    [MustDisposeResource]
-    public static Server Create(Func<string?, bool>? onDeviceAcquire = null, Action<string?>? onDeviceRelease = null)
+    public Server(jackctl_server* handle)
     {
-        S.DeviceAcquireHandler? onDeviceAcquireRaw = null;
-        if (onDeviceAcquire is not null)
-        {
-            onDeviceAcquireRaw = (byte* deviceNamePtr) =>
-            {
-                var result = onDeviceAcquire(Marshal.PtrToStringUTF8((nint)deviceNamePtr));
-                return result ? (byte)1 : (byte)0;
-            };
-        }
+        this.Handle = handle;
+    }
 
-        S.DeviceReleaseHandler? onDeviceReleaseRaw = null;
-        if (onDeviceRelease is not null)
-        {
-            onDeviceReleaseRaw = (byte* deviceNamePtr) => onDeviceRelease(Marshal.PtrToStringUTF8((nint)deviceNamePtr));
-        }
-        var server = new Server(S.Create(onDeviceAcquireRaw, onDeviceReleaseRaw));
-        server.TrackNativeReference(onDeviceAcquireRaw);
-        server.TrackNativeReference(onDeviceReleaseRaw);
-        return server;
+    private Server()
+    {
+        var onDeviceAcquireHandlerRaw = this.OnDeviceAcquireHandlerRaw;
+        var onDeviceAcquireFunPtr = Marshal.GetFunctionPointerForDelegate(onDeviceAcquireHandlerRaw);
+        var onDeviceReleaseHandlerRaw = this.OnDeviceReleaseHandlerRaw;
+        var onDeviceReleaseFunPtr = Marshal.GetFunctionPointerForDelegate(onDeviceReleaseHandlerRaw);
+        this.Handle = S.Create((delegate* unmanaged[Cdecl]<byte*, byte>)onDeviceAcquireFunPtr,
+            (delegate* unmanaged[Cdecl]<byte*, void>)onDeviceReleaseFunPtr);
+        TrackNativeReference(onDeviceAcquireHandlerRaw);
+        TrackNativeReference(onDeviceReleaseHandlerRaw);
+    }
+
+    [MustDisposeResource]
+    public static Server Create() => new Server();
+
+    public event EventHandler<string?>? DeviceAcquired;
+    public event EventHandler<string?>? DeviceReleased;
+
+    private byte OnDeviceAcquireHandlerRaw(byte* deviceNamePtr)
+    {
+        var result = this.OnDeviceAcquireHandler(Marshal.PtrToStringUTF8((nint)deviceNamePtr));
+        return result ? (byte)1 : (byte)0;
+    }
+
+    private bool OnDeviceAcquireHandler(string? deviceName)
+    {
+        this.DeviceAcquired?.Invoke(this, deviceName);
+        return this.OnDeviceAcquire(deviceName);
+    }
+
+    protected virtual bool OnDeviceAcquire(string? deviceName)
+    {
+        return true;
+    }
+
+    private void OnDeviceReleaseHandlerRaw(byte* deviceNamePtr)
+    {
+        this.OnDeviceReleaseHandler(Marshal.PtrToStringUTF8((nint)deviceNamePtr));
+    }
+
+    private void OnDeviceReleaseHandler(string? deviceName)
+    {
+        this.DeviceReleased?.Invoke(this, deviceName);
     }
 
     // Keep track of a given object as a native reference, preventing it from being GC'd or moved during the lifetime
     // of the Server object
-    private void TrackNativeReference(object? d)
+    private static void TrackNativeReference(object? d)
     {
         if (d is not null)
         {
@@ -66,6 +92,7 @@ public unsafe class Server(jackctl_server* handle) : IDisposable
         [..S.GetDriversList(this.Handle).Select(dPtr => new Driver(dPtr))];
 
     private IImmutableList<IParameter>? _parameters;
+
     public IImmutableList<IParameter> Parameters => this._parameters ??= this.GetParameters();
 
     private ImmutableArray<IParameter> GetParameters() =>

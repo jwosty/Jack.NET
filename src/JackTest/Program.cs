@@ -22,7 +22,15 @@ public static unsafe class Program
 
     private static void DumpServerInfo()
     {
-        using var server = Server.Create(OnDeviceAcquire, OnDeviceRelease);
+        using var server = Server.Create();
+        server.DeviceAcquired += (_, deviceName) =>
+        {
+            Console.WriteLine("Device acquired: {0}", deviceName);
+        };
+        server.DeviceReleased += (_, deviceName) =>
+        {
+            Console.WriteLine("Device released: {0}", deviceName);
+        };
         Console.WriteLine("== Server ==");
         foreach (var serverParam in server.Parameters)
         {
@@ -42,17 +50,6 @@ public static unsafe class Program
             }
             Console.WriteLine("");
         }
-    }
-
-    private static bool OnDeviceAcquire(string? deviceName)
-    {
-        Console.WriteLine("Device acquired: {0}", deviceName);
-        return true;
-    }
-
-    private static void OnDeviceRelease(string? deviceName)
-    {
-        Console.WriteLine("Device released: {0}", deviceName);
     }
 
     private static void VisitParam(IParameter driverParam)

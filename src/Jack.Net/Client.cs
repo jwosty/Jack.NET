@@ -6,7 +6,9 @@ using JetBrains.Annotations;
 [PublicAPI]
 public unsafe class Client(_jack_client* handle) : IDisposable
 {
-    public _jack_client* Handle { get; private set; } = handle;
+    public _jack_client* Handle { get; } = handle;
+
+    private bool _disposed = false;
 
     [MustDisposeResource]
     public static Client Open(string name, JackOptions options, out JackStatus status, string? serverName = null)
@@ -24,16 +26,25 @@ public unsafe class Client(_jack_client* handle) : IDisposable
 
     public void Close()
     {
-        if (this.Handle is not null)
-        {
-            InteropHelpers.CheckResult("Could not close client", Jack.ClientClose(this.Handle));
-        }
+        InteropHelpers.CheckResult("Could not close client", Jack.ClientClose(this.Handle));
     }
-
-    public static int MaxNameLength => jack.client_name_size();
 
     public bool TryClose() =>
         this.Handle is not null && InteropHelpers.IsSuccess(Jack.ClientClose(this.Handle));
+
+    // Subtract 1 because the C API includes the null terminator, and this abstraction layer should not
+    public static int MaxNameLength => jack.client_name_size() - 1;
+
+    public string? Name => Jack.GetClientName(this.Handle);
+
+    public Guid? GetUuidForClientName(string clientName)
+    {
+        var uuidStr = Jack.GetUuidForClientName(this.Handle, clientName);
+        return uuidStr is null ? null : Guid.Parse(uuidStr);
+    }
+
+    public string? GetClientNameByUuid(Guid clientId) =>
+        Jack.GetClientNameByUuid(this.Handle, clientId.ToString());
 
     public void Activate() =>
         InteropHelpers.CheckResult("Could not activate client", Jack.Activate(this.Handle));
@@ -47,25 +58,15 @@ public unsafe class Client(_jack_client* handle) : IDisposable
     public bool TryDeactivate() =>
         InteropHelpers.IsSuccess(Jack.Deactivate(this.Handle));
 
-    public string? Name => Jack.GetClientName(this.Handle);
-
-    public Guid? GetUuidForClientName(string clientName)
-    {
-        var uuidStr = Jack.GetUuidForClientName(this.Handle, clientName);
-        return uuidStr is null ? null : Guid.Parse(uuidStr);
-    }
-
-    public string? GetClientNameByUuid(Guid clientId) =>
-        Jack.GetClientNameByUuid(this.Handle, clientId.ToString());
-
     public uint ThreadId => (uint)Jack.ClientThreadId(this.Handle);
+
+    public bool IsRealtime => Jack.IsRealtime(this.Handle);
 
     protected virtual void Dispose(bool disposing)
     {
-        this.Close();
-        if (disposing)
+        if (!this._disposed)
         {
-            this.Handle = null;
+            this.Close();
         }
     }
 

@@ -17,8 +17,10 @@ public unsafe class Server(jackctl_server* handle) : IDisposable
 
     private bool _disposed = false;
 
-    // references held by native code that we need to keep alive
-    private ConcurrentBag<GCHandle> _nativeReferences = new();
+    // References held by native code that we need to keep alive
+    // It appears that JACK sometimes still calls these callbacks after we call jackctl_server_destroy, so I guess we
+    // keep them alive indefinitely...
+    private static ConcurrentBag<GCHandle> _permanentNativeReferences = new();
 
     [MustDisposeResource]
     public static Server Create(Func<string?, bool>? onDeviceAcquire = null, Action<string?>? onDeviceRelease = null)
@@ -51,11 +53,11 @@ public unsafe class Server(jackctl_server* handle) : IDisposable
         if (d is not null)
         {
             var handle = GCHandle.Alloc(d);
-            this._nativeReferences.Add(handle);
+            _permanentNativeReferences.Add(handle);
         }
     }
 
-    private void TrackNativeReference(GCHandle handle) => this._nativeReferences.Add(handle);
+    private void TrackNativeReference(GCHandle handle) => _permanentNativeReferences.Add(handle);
 
     private IImmutableList<Driver>? _driversList;
     public IImmutableList<Driver> DriversList => this._driversList ??= this.GetDriversList();
@@ -72,10 +74,6 @@ public unsafe class Server(jackctl_server* handle) : IDisposable
     private void Destroy()
     {
         S.Destroy(this.Handle);
-        while (this._nativeReferences.TryTake(out var handle))
-        {
-            handle.Free();
-        }
     }
 
     protected virtual void Dispose(bool disposing)

@@ -59,7 +59,7 @@ public static unsafe class Jack
                 var serverNamePtr = (byte*)Marshal.StringToCoTaskMemUTF8(serverName);
                 try
                 {
-                    return jack.client_open(clientNamePtr, options, statusPtr, __arglist(serverNamePtr));
+                    return jackdotnet_jack.client_open_1(clientNamePtr, options, statusPtr, serverNamePtr);
                 }
                 finally
                 {

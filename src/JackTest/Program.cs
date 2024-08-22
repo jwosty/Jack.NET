@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using Jack.Net.Interop;
+using Jack.NET.Interop;
 
 namespace JackTest;
 
-// using Jack.Net.Interop;
-// using Jack.Net.Interop.JackCtl;
-using Jack.Net;
+// using Jack.NET.Interop;
+// using Jack.NET.Interop.JackCtl;
+using Jack.NET;
 
 public static unsafe class Program
 {
@@ -15,7 +15,7 @@ public static unsafe class Program
         DumpServerInfo();
         GC.Collect();
         Console.WriteLine("== Client ==");
-        using var client = Client.Open("Jack.Net Test (◪)", JackOptions.JackNullOption, out var status);
+        using var client = Client.Open("Jack.NET Test (◪)", JackOptions.JackNullOption, out var status);
         Console.WriteLine("Client name: {0}", client.Name);
         Console.WriteLine("Done.");
     }

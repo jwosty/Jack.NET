@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -9,11 +8,7 @@
         <Platforms>x86;x64;arm64</Platforms>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\jackdotnet\jackdotnet.vcxproj">
-        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        <OutputItemType>Content</OutputItemType>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </ProjectReference>
-      <ProjectReference Include="..\Jack.NET\Jack.NET.csproj" />
+        <ProjectReference Include="..\Jack.NET.Interop\Jack.NET.Interop.csproj" />
+        <Compile Include="..\Jack.NET.Interop\JetBrains.Annotations.cs" />
     </ItemGroup>
 </Project>

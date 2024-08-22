@@ -14,7 +14,7 @@
      73113:	
      73113:	transferring control: strace
      73113:	
-execve("/opt/bin/dotnet", ["dotnet", "ClangSharpPInvokeGenerator", "--language", "c", "--output", "./src/Jack.Net.NativeInterop", "--namespace", "Jack.Net.NativeInterop", "--file-directory", "./src/Jack.Net.NativeInterop", "--file", "./src/Jack.Net.NativeInterop/../"...], 0xffffc0d6a3d8 /* 53 vars */) = 0
+execve("/opt/bin/dotnet", ["dotnet", "ClangSharpPInvokeGenerator", "--language", "c", "--output", "./src/Jack.NET.NativeInterop", "--namespace", "Jack.NET.NativeInterop", "--file-directory", "./src/Jack.NET.NativeInterop", "--file", "./src/Jack.NET.NativeInterop/../"...], 0xffffc0d6a3d8 /* 53 vars */) = 0
 brk(NULL)                               = 0xaaab00d74000
 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xffff89da0000
 faccessat(AT_FDCWD, "/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
@@ -259,8 +259,8 @@ writev(2, [{iov_base="     73116:\t", iov_len=12}, {iov_base="\n", iov_len=1}, {
 ) = 93
 faccessat(AT_FDCWD, "/opt/dotnet/libcoreclr.so", F_OK) = -1 ENOENT (No such file or directory)
 faccessat(AT_FDCWD, "/opt/dotnet/dotnet.dll", F_OK) = -1 ENOENT (No such file or directory)
-getcwd("/home/jwostenberg/Code/Jack.Net", 4096) = 32
-faccessat(AT_FDCWD, "/home/jwostenberg/Code/Jack.Net/global.json", F_OK) = -1 ENOENT (No such file or directory)
+getcwd("/home/jwostenberg/Code/Jack.NET", 4096) = 32
+faccessat(AT_FDCWD, "/home/jwostenberg/Code/Jack.NET/global.json", F_OK) = -1 ENOENT (No such file or directory)
 faccessat(AT_FDCWD, "/home/jwostenberg/Code/global.json", F_OK) = -1 ENOENT (No such file or directory)
 faccessat(AT_FDCWD, "/home/jwostenberg/global.json", F_OK) = -1 ENOENT (No such file or directory)
 faccessat(AT_FDCWD, "/home/global.json", F_OK) = -1 ENOENT (No such file or directory)
@@ -3917,13 +3917,13 @@ mprotect(0xffff4c3c9000, 4096, PROT_READ|PROT_WRITE) = 0
 mprotect(0xffff4c485000, 4096, PROT_READ|PROT_WRITE) = 0
 mprotect(0xffff4c486000, 4096, PROT_READ|PROT_WRITE) = 0
 mprotect(0xffff4c487000, 4096, PROT_READ|PROT_WRITE) = 0
-getcwd("/home/jwostenberg/Code/Jack.Net", 256) = 32
+getcwd("/home/jwostenberg/Code/Jack.NET", 256) = 32
 mprotect(0xffff4c3ca000, 4096, PROT_READ|PROT_WRITE) = 0
 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, 8, 0xe000) = 0xffff89d14000
 munmap(0xffff89d44000, 4096)            = 0
 mprotect(0xffff4c488000, 4096, PROT_READ|PROT_WRITE) = 0
 mprotect(0xffff4c489000, 4096, PROT_READ|PROT_WRITE) = 0
-getcwd("/home/jwostenberg/Code/Jack.Net", 256) = 32
+getcwd("/home/jwostenberg/Code/Jack.NET", 256) = 32
 mprotect(0xffff49f8d000, 4096, PROT_READ|PROT_EXEC) = 0
 mprotect(0xffff4c48a000, 4096, PROT_READ|PROT_WRITE) = 0
 mmap(0xffff4c490000, 65536, PROT_NONE, MAP_SHARED|MAP_FIXED, 8, 0x741000) = 0xffff4c490000
@@ -3945,7 +3945,7 @@ mmap(NULL, 16384, PROT_READ|PROT_WRITE, MAP_SHARED, 8, 0x749000) = 0xffff8973600
 munmap(0xffff89736000, 16384)           = 0
 mprotect(0xffff4c4a5000, 4096, PROT_READ|PROT_WRITE) = 0
 mprotect(0xffff4c3cf000, 4096, PROT_READ|PROT_WRITE) = 0
-newfstatat(AT_FDCWD, "/home/jwostenberg/Code/Jack.Net/.config/dotnet-tools.json", {st_mode=S_IFREG|0644, st_size=218, ...}, AT_SYMLINK_NOFOLLOW) = 0
+newfstatat(AT_FDCWD, "/home/jwostenberg/Code/Jack.NET/.config/dotnet-tools.json", {st_mode=S_IFREG|0644, st_size=218, ...}, AT_SYMLINK_NOFOLLOW) = 0
 readlinkat(AT_FDCWD, "/opt", 0xffffd9a01cb0, 1023) = -1 EINVAL (Invalid argument)
 readlinkat(AT_FDCWD, "/opt/dotnet", 0xffffd9a01cb0, 1023) = -1 EINVAL (Invalid argument)
 readlinkat(AT_FDCWD, "/opt/dotnet/shared", 0xffffd9a01cb0, 1023) = -1 EINVAL (Invalid argument)
@@ -3981,7 +3981,7 @@ mprotect(0xffff4c4a9000, 4096, PROT_READ|PROT_WRITE) = 0
 mprotect(0xffff4c4aa000, 4096, PROT_READ|PROT_WRITE) = 0
 futex(0xaaab00d8ddb0, FUTEX_WAKE_PRIVATE, 1) = 1
 futex(0xaaab00d8dd58, FUTEX_WAKE_PRIVATE, 1) = 1
-openat(AT_FDCWD, "/home/jwostenberg/Code/Jack.Net/.config/dotnet-tools.json", O_RDONLY|O_CLOEXEC) = 102
+openat(AT_FDCWD, "/home/jwostenberg/Code/Jack.NET/.config/dotnet-tools.json", O_RDONLY|O_CLOEXEC) = 102
 fstat(102, {st_mode=S_IFREG|0644, st_size=218, ...}) = 0
 flock(102, LOCK_SH|LOCK_NB)             = 0
 mprotect(0xffff4c4ab000, 4096, PROT_READ|PROT_WRITE) = 0
@@ -5551,8 +5551,8 @@ futex(0xaaab00dec078, FUTEX_WAIT_BITSET_PRIVATE|FUTEX_CLOCK_REALTIME, 0, NULL, F
      73137:	  trying file=/lib/liblibclang.so.1.so
      73137:	  trying file=/usr/lib/liblibclang.so.1.so
      73137:	
-Error: Parsing failed for './src/Jack.Net.NativeInterop/./src/Jack.Net.NativeInterop/../../headers/jack/jack.h' due to 'CXError_Failure'.
-Skipping './src/Jack.Net.NativeInterop/./src/Jack.Net.NativeInterop/../../headers/jack/jack.h' due to one or more errors listed above.
+Error: Parsing failed for './src/Jack.NET.NativeInterop/./src/Jack.NET.NativeInterop/../../headers/jack/jack.h' due to 'CXError_Failure'.
+Skipping './src/Jack.NET.NativeInterop/./src/Jack.NET.NativeInterop/../../headers/jack/jack.h' due to one or more errors listed above.
 
 Unhandled exception:      73137:	find library=libz.so.1 [0]; searching
      73137:	 search cache=/etc/ld.so.cache
@@ -5564,7 +5564,7 @@ Unhandled exception:      73137:	find library=libz.so.1 [0]; searching
      73137:	
      73137:	calling init: /opt/dotnet/shared/Microsoft.NETCore.App/8.0.7/libSystem.IO.Compression.Native.so
      73137:	
-System.UnauthorizedAccessException: Access to the path '/home/jwostenberg/Code/Jack.Net/src/Jack.Net.NativeInterop' is denied.
+System.UnauthorizedAccessException: Access to the path '/home/jwostenberg/Code/Jack.NET/src/Jack.NET.NativeInterop' is denied.
  ---> System.IO.IOException: Permission denied
    --- End of inner exception stack trace ---
    at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)

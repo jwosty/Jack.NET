@@ -1,4 +1,4 @@
-# Jack.Net
+# Jack.NET
 
 ## Development
 
